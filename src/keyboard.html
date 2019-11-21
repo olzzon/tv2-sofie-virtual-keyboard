@@ -1,0 +1,1074 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="UTF-8">
+<link rel="stylesheet" href="styles.css">		
+<title>Sofie Keyboard Conceptual</title>
+<script>
+function setStyles(){
+	
+  // id for special buttons (§=sectionSign)	
+  // class to graphic buttons
+	
+  const noColor= ["sectionSign"];
+		noColor.forEach(function (item, index) {
+ 			var res = item.split(":"); 
+ 			var element = document.getElementById(res[0]);
+  			var spans = element.getElementsByTagName("span");
+			
+			if (typeof res[1] !== 'undefined'){
+				spans[1].innerHTML = res[1];
+			}
+ 		});
+	
+	  const live= ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0","shift-1", "shift-2", "shift-3", "shift-4", "shift-5", "shift-6", "shift-7", "shift-8", "shift-9", "shift-0","ctrl-1", "ctrl-2", "ctrl-3", "ctrl-4", "ctrl-5", "ctrl-6", "ctrl-7", "ctrl-8", "ctrl-9", "ctrl-0","alt-1", "alt-2", "alt-3", "alt-4", "alt-5", "alt-6", "alt-7", "alt-8", "alt-9", "alt-0","ctrl-shift-1", "ctrl-shift-2", "ctrl-shift-3", "ctrl-shift-4", "ctrl-shift-5", "ctrl-shift-6", "ctrl-shift-7", "ctrl-shift-8", "ctrl-shift-9", "ctrl-shift-0"];
+		live.forEach(function (item, index) {
+ 			var res = item.split(":"); 
+ 			var element = document.getElementById(res[0]);
+			element.classList.add("live");
+  			var spans = element.getElementsByTagName("span");
+			
+			if (typeof res[1] !== 'undefined'){
+				spans[1].innerHTML = res[1];
+			}
+ 		});
+	
+	
+   const graphic = ["I:Seneste Telefon gfx"];
+		graphic.forEach(function (item, index) {
+ 			var res = item.split(":"); 
+ 			var element = document.getElementById(res[0]);
+  			element.classList.add("graphic");
+			var spans = element.getElementsByTagName("span");
+			
+			if (typeof res[1] !== 'undefined'){
+				spans[1].innerHTML = res[1];
+			}
+ 		});
+	 //class to VO buttons
+   const vo = [];
+		vo.forEach(function (item, index) {
+ 			var res = item.split(":"); 
+ 			var element = document.getElementById(res[0]);
+  			element.classList.add("vo");
+			var spans = element.getElementsByTagName("span");
+			
+			if (typeof res[1] !== 'undefined'){
+				spans[1].innerHTML = res[1];
+			}
+ 		});	
+	 //class to CAM buttons
+   const cam = ["F1:KAM 1", "F2:KAM 2", "F3: KAM 3", "F4:KAM 4", "F5: KAM 5"];
+		cam.forEach(function (item, index) {
+			var res = item.split(":"); 
+ 			var element = document.getElementById(res[0]);
+  			element.classList.add("camera");
+			var spans = element.getElementsByTagName("span");
+			
+			if (typeof res[1] !== 'undefined'){
+				spans[1].innerHTML = res[1];
+			}
+			
+ 		});
+		 //class overlay  buttons
+   const overlay = ["A:", "S", "D", "F", "G","ctrl-alt-A:Design style SC", "ctrl-alt-D:Design style Badminton", "O:CLEAR OVL"];
+		overlay.forEach(function (item, index) {
+ 			var res = item.split(":"); 
+ 			var element = document.getElementById(res[0]);
+  			element.classList.add("overlay");
+			var spans = element.getElementsByTagName("span");
+			
+			if (typeof res[1] !== 'undefined'){
+				spans[1].innerHTML = res[1];
+			}
+ 		});
+			 //class to DVE buttons
+   const dve = ["ctrl-B:adlib MB", "C:MorBarn","ctrl-M:sommerfugl",,"ctrl-V:addlib BM"];
+		dve.forEach(function (item, index) {
+ 			var res = item.split(":"); 
+ 			var element = document.getElementById(res[0]);
+  			element.classList.add("dve");
+			var spans = element.getElementsByTagName("span");
+			
+			if (typeof res[1] !== 'undefined'){
+				spans[1].innerHTML = res[1];
+			}
+ 		});	
+}
+
+function sendSofieMessage(type, payload, replyTo) {
+	if (!window.parent) return;
+	window.parent.postMessage({
+		id: Date.now().toString(),
+		replyToId: replyTo,
+		type: type,
+		payload: payload
+	}, "*");
+}
+
+function onLoad () {
+	setStyles();
+	sendSofieMessage('hello');
+}
+
+//keyboard interaction
+var ctrlDown = 0;
+var shiftDown = 0;
+var altDown = 0;
+
+function keyUpHandler (event) {
+	const keyName = event.key;
+	switch (keyName) {
+		case 'Control':
+			//console.log('Turn of control layer  ');
+			displayLayer('ctrlLayer', 'off');
+			displayLayer('ctrl-shiftLayer', 'off');
+			displayLayer('ctrl-altLayer', 'off');
+			displayLayer('ctrl-alt-shiftLayer', 'off');
+			break;
+		case 'Shift':
+			displayLayer('shiftLayer', 'off');
+			displayLayer('ctrl-shiftLayer', 'off');
+			displayLayer('alt-shiftLayer', 'off');
+			displayLayer('ctrl-alt-shiftLayer', 'off');
+
+			break;
+		case 'Alt':
+			//if ctrl is pressed
+			displayLayer('altLayer', 'off');
+			displayLayer('alt-shiftLayer', 'off');
+			displayLayer('ctrl-alt-shiftLayer', 'off');
+			break;
+
+	}
+}
+
+function keyDownHandler (event) {
+	const keyName = event.key;
+	// console.log(keyName );
+
+
+	if (event.ctrlKey) {
+		//console.log('Control is pressed');
+		displayLayer('ctrlLayer', 'on');
+	}
+	if (event.shiftKey) {
+		//console.log('Turn on shift layer  ');
+		displayLayer('shiftLayer', 'on');
+	}
+	if (event.altKey) {
+		console.log('Turn on alt layer');
+		displayLayer('altLayer', 'on');
+	}
+	if (event.ctrlKey && event.shiftKey) {
+		console.log('Control + shift key is pressed');
+		displayLayer('ctrl-shiftLayer', 'on');
+	}
+	if (event.ctrlKey && event.altKey) {
+		//console.log('Control + alt key is pressed');
+		displayLayer('ctrl-altLayer', 'on');
+	}
+	if (event.shiftKey && event.altKey) {
+		//console.log('shift + alt key is pressed');
+		displayLayer('alt-shiftLayer', 'on');
+	}
+	if (event.shiftKey && event.altKey && event.ctrlKey) {
+		console.log('Control + shift + alt key is pressed');
+		displayLayer('ctrl-alt-shiftLayer', 'on');
+	}
+}
+
+document.addEventListener('keydown', keyDownHandler, false);
+document.addEventListener('keyup', keyUpHandler, false);
+
+window.addEventListener('message', (event) => {
+	try {
+		const message = event.data || e.message;
+		if (!message || !message.type) return;
+		switch (message.type) {
+			case 'welcome':
+				console.log('Hosted by: ', message.payload);
+				// finish three-way handshake
+				sendSofieMessage('ack', undefined, message.id);
+				break;
+			case 'keyboard_event':
+				const payload = message.payload;
+				if (payload && payload.type === "keydown") {
+					keyDownHandler(payload);
+				} else if (payload && payload.type === "keyup") {
+					keyUpHandler(payload);
+				}
+				break;
+		}
+	} catch (e) {
+
+	}
+})
+
+function displayLayer(layer, state) {
+	console.log('displayLayer is called with variable ' + layer + ' ' + state);
+	if (state == 'on') { 
+		document.getElementById(layer).style.display ='block';
+	} else {
+		document.getElementById(layer).style.display= 'none';
+	}
+}
+</script>
+</head>
+<body onload="onLoad()">
+
+
+
+
+<div id="wrapper">	
+<div id="normalLayer">	
+	<!-- ROW 1 -->
+	<div id="row1" class="row1 rowContainer">
+   
+	<div id="ESC" class="esc btn"><span class="BTNletter">ESC</span><span class="BTNtext">RESET Rundown</span></div>
+	<div id="ESC-space" class="esc-space"></div>
+	<div id="F1" class="F1 tooltip btn"><span class="BTNletter">F1</span><span class="BTNtext">Kam1</span><span class="tooltiptext"></span></div>
+	<div id="F2" class="F2 tooltip btn"><span class="BTNletter">F2</span><span class="BTNtext">Kam2</span><span class="tooltiptext"></span></div>
+	<div id="F3" class="F3 tooltip btn"><span class="BTNletter">F3</span><span class="BTNtext">Kam3</span><span class="tooltiptext"></span></div>
+	<div id="F4" class="F4 tooltip btn"><span class="BTNletter">F4</span><span class="BTNtext">Kam4</span><span class="tooltiptext"></span></div>
+	<div id="F5" class="F5 btn"><span class="BTNletter">F5</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="F6" class="F6 tooltip btn"><span class="BTNletter">F6</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="F7" class="F7 tooltip btn"><span class="BTNletter">F7</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="F8" class="F8 tooltip btn"><span class="BTNletter">F8</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="F9" class="F9 tooltip btn"><span class="BTNletter">F9</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="F10" class="F10 btn"><span class="BTNletter">F10</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="F11" class="F11 tooltip btn"><span class="BTNletter">F11</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="F12" class="F12 tooltip btn"><span class="BTNletter">F12</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+
+	</div>
+	<!-- ROW 2 START-->
+	<div id="row2" class="row2 rowContainer">
+	<div id="sectionSign" class="btn"><span class="BTNletter">§</span><span class="BTNtext">Rundown AKTIVER</span></div><!-- §-->
+	<div id="1" class="1 tooltip btn"><span class="BTNletter">1</span><span class="BTNtext">LIVE 1</span><span class="tooltiptext"></span></div>
+	<div id="2" class="2 tooltip btn"><span class="BTNletter">2</span><span class="BTNtext">LIVE 2</span><span class="tooltiptext"></span></div>
+	<div id="3" class="3 tooltip btn"><span class="BTNletter">3</span><span class="BTNtext">LIVE 3</span><span class="tooltiptext"></span></div>
+	<div id="4" class="4 tooltip btn"><span class="BTNletter">4</span><span class="BTNtext">LIVE 4</span><span class="tooltiptext"></span></div>
+	<div id="5" class="5 tooltip btn"><span class="BTNletter">5</span><span class="BTNtext">LIVE 5</span><span class="tooltiptext"></span></div>
+	<div id="6" class="6 tooltip btn"><span class="BTNletter">6</span><span class="BTNtext">LIVE 6</span><span class="tooltiptext"></span></div>
+	<div id="7" class="7 tooltip btn"><span class="BTNletter">7</span><span class="BTNtext">LIVE 7</span><span class="tooltiptext"></span></div>
+	<div id="8" class="8 tooltip btn"><span class="BTNletter">8</span><span class="BTNtext">LIVE 8</span><span class="tooltiptext"></span></div>
+	<div id="9" class="9 tooltip btn"><span class="BTNletter">9</span><span class="BTNtext">LIVE 9</span><span class="tooltiptext"></span></div>
+	<div id="0" class="10 tooltip btn"><span class="BTNletter">0</span><span class="BTNtext">LIVE 10</span><span class="tooltiptext"></span></div>
+	<div id="plusSign" class="plusSign tooltip btn"><span class="BTNletter">+</span><span class="BTNtext"></span></div>
+	<div id="diacriticalMarkSign " class="diacriticalMarkSign tooltip btn"><span class="BTNletter">´</span><span class="BTNtext"></span></div><!-- ´-->
+	<div id="backspace" class="backspace tooltip btn"><span class="BTNletter">backspace</span><span class="BTNtext"></span></div>
+	</div>
+	<!-- ROW 3 -->
+	<div id="row3" class="row3 rowContainer">
+	<div id="tab" class="tab tooltip btn"><span class="BTNletter">TAB</span><span class="BTNtext">Toggle hylde</span></div>
+	<div id="Q"  class="Q tooltip btn"><span class="BTNletter">Q</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="W"  class="W tooltip btn"><span class="BTNletter">W</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="E"  class="E tooltip btn"><span class="BTNletter">E</span><span class="BTNtext">EVS 1 VO</span><span class="tooltiptext"></span></div>
+	<div id="R"  class="R tooltip btn"><span class="BTNletter">R</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="T" class="T tooltip  btn"><span class="BTNletter">T</span><span class="BTNtext">SERV A</span><span class="tooltiptext"></span></div>
+	<div id="Y" class="Y tooltip  btn"><span class="BTNletter">Y</span><span class="BTNtext">SERV B</span><span class="tooltiptext"></span></div>
+	<div id="U"  class="U btn"><span class="BTNletter">U</span><span class="BTNtext">TAKE SERVER PGM</span><span class="tooltiptext"></span></div>
+	<div id="I" class="I btn"><span class="BTNletter">I</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="O" class="O btn"><span class="BTNletter">O</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="P"  class="P btn"><span class="BTNletter">P</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="Å" class="Å btn"><span class="BTNletter">Å</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="umlautSign" class="umlautSign btn"><span class="BTNletter">¨</span><span class="BTNtext"></span><span class="tooltiptext"></span></div><!-- ¨ -->
+			<div id="insert" class="insert tooltip btn"><span class="BTNletter">INS</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+			<div id="home" class="home tooltip btn"><span class="BTNletter">HOME</span><span class="BTNtext">sidste ovl af</span><span class="tooltiptext"></span></div>
+			<div id="pup" class="pup tooltip btn"><span class="BTNletter">PGDUP</span><span class="BTNtext">Sec audio op</span><span class="tooltiptext"></span></div>
+	</div>
+	<!-- ROW 4 -->
+	<div id="row4" class="row4 rowContainer">
+	<div id="A" class="A tooltip btn"><span class="BTNletter">A</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="S" class="S btn"><span class="BTNletter">S</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="D" class="D btn"><span class="BTNletter">D</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="F" class="F btn"><span class="BTNletter">F</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="G" class="G tooltip btn"><span class="BTNletter">G</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="H" class="H tooltip btn"><span class="BTNletter">H</span><span class="BTNtext">HOLD</span><span class="tooltiptext"></span></div>
+	<div id="J" class="J tooltip btn"><span class="BTNletter">J</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="K" class="K btn"><span class="BTNletter">K</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="L" class="L btn"><span class="BTNletter">L</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="Æ" class="Æ btn"><span class="BTNletter">Æ</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="Ø" class="Ø tooltip  btn"><span class="BTNletter">Ø</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="apostropheSign" class="apostropheSign tooltip btn"><span class="BTNletter">'</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+			<div id="delete" class="delete tooltip btn"><span class="BTNletter">DEL</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+			<div id="end" class="end tooltip btn"><span class="BTNletter">END</span><span class="BTNtext">DSK 1 on/off</span><span class="tooltiptext"></span></div>
+			<div id="pdown" class="pdown tooltip btn"><span class="BTNletter">PGDO</span><span class="BTNtext">sec audio ned</span><span class="tooltiptext"></span></div>
+	</div>
+	<!-- ROW 5 -->
+	<div id="row5" class="row5 rowContainer">
+	 <div id="shift" class="shift tooltip btn"><span class="BTNletter">SHIFT</span><span class="BTNtext"></span></div>
+	<div id="lessThanSign" class="lessThanSign tooltip btn"><span class="BTNletter">&lt;</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="Z" class="Z tooltip  btn"><span class="BTNletter">Z</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="X" class="X tooltip btn"><span class="BTNletter">X</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="C" class="C tooltip  btn"><span class="BTNletter">C</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="V" class="V btn"><span class="BTNletter">V</span><span class="BTNtext"></span></div>
+	<div id="B" class="B btn"><span class="BTNletter">B</span><span class="BTNtext"></span></div>
+	<div id="N" class="N btn"><span class="BTNletter">N</span><span class="BTNtext"></span></div>
+	<div id="M" class="M btn"><span class="BTNletter">M</span><span class="BTNtext"></span></div>
+	<div id="commasign" class="commasign btn"><span class="BTNletter">,</span><span class="BTNtext"></span></div>
+	<div id="punktSign" class="punktSign btn"><span class="BTNletter">.</span><span class="BTNtext"></span></div>
+	<div id="hyphenSign" class="hyphenSign btn"><span class="BTNletter">-</span><span class="BTNtext">VIZ INIT</span></div>
+	<div id="op" class="op btn"><span class="BTNletter">op</span><span class="BTNtext">Rundown OP</span></div>
+	</div>
+	<!-- ROW 6 -->
+	<div id="row6" class="row6 rowContainer">
+	 <div id="ctrlleft" class="ctrlleft tooltip btn"><span class="BTNletter">CTRL</span><span class="BTNtext"></span></div>
+	<div id="windows" class="windows tooltip  btn"><span class="BTNletter">WIN</span><span class="BTNtext"></span></div>
+	<div id="alt" class="alt tooltip  btn"><span class="BTNletter">ALT</span><span class="BTNtext"></span></div>
+	<div id="space" class="space tooltip btn"><span class="BTNletter">Space</span><span class="BTNtext">Continue Viz Overlay</span></div>
+	<div id="altgr" class="altgr tooltip  btn"><span class="BTNletter">AltGr</span><span class="BTNtext"></span></div>
+	<div id="ctrlright" class="ctrlright btn"><span class="BTNletter">ctrl</span><span class="BTNtext"></span></div>
+	<div id="venstre" class="venstre btn"><span class="BTNletter">venstre</span><span class="BTNtext">Rundown Tilbae</span></div>
+	<div id="ned" class="ned btn"><span class="BTNletter">ned</span><span class="BTNtext">Rundown Ned</span></div>
+	<div id="hoejre" class="hoejre btn"><span class="BTNletter">Højre</span><span class="BTNtext">Rundown Frem</span></div>
+	
+	</div>
+</div><!-- normal layer -->
+<div id="shiftLayer">	
+	<!-- ROW 1 -->
+	<div id="shift-row1" class="row1 rowContainer">
+	<div id="shift-ESC" class="esc btn"><span class="BTNletter">ESC</span></div>
+	<div id="shift-ESC-space" class="esc-space"></div>
+	<div id="shift-F1" class="F1 tooltip btn"><span class="BTNletter">F1</span><span class="BTNtext">Kam1</span><span class="tooltiptext"></span></div>
+	<div id="shift-F2" class="F2 tooltip btn"><span class="BTNletter">F2</span><span class="BTNtext">Kam2</span><span class="tooltiptext"></span></div>
+	<div id="shift-F3" class="F3 tooltip btn"><span class="BTNletter">F3</span><span class="BTNtext">Kam3</span><span class="tooltiptext"></span></div>
+	<div id="shift-F4" class="F4 tooltip btn"><span class="BTNletter">F4</span><span class="BTNtext">Kam4</span><span class="tooltiptext"></span></div>
+	<div id="shift-F5" class="F5 btn"><span class="BTNletter">F5</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="shift-F6" class="F6 tooltip btn"><span class="BTNletter">F6</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="shift-F7" class="F7 tooltip btn"><span class="BTNletter">F7</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="shift-F8" class="F8 tooltip btn"><span class="BTNletter">F8</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="shift-F9" class="F9 tooltip btn"><span class="BTNletter">F9</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="shift-F10" class="F10 btn"><span class="BTNletter">F10</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="shift-F11" class="F11 tooltip btn"><span class="BTNletter">F11</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="shift-F12" class="F12 tooltip btn"><span class="BTNletter">F12</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+		<div class="layerTxt">DVE INP 1</div>
+	</div>
+	<!-- ROW 2 START-->
+	<div id="shift-row2" class="row2 rowContainer">
+	<div id="shift-sectionSign" class="btn"><span class="BTNletter">§</span><span class="BTNtext"></span></div><!-- §-->
+	<div id="shift-1" class="1 tooltip btn"><span class="BTNletter">1</span><span class="BTNtext">LIVE 1 til DVE inp 1</span><span class="tooltiptext"></span></div>
+	<div id="shift-2" class="2 tooltip btn"><span class="BTNletter">2</span><span class="BTNtext">LIVE 2 til DVE inp 1</span><span class="tooltiptext"></span></div>
+	<div id="shift-3" class="3 tooltip btn"><span class="BTNletter">3</span><span class="BTNtext">LIVE 3 til DVE inp 1</span><span class="tooltiptext"></span></div>
+	<div id="shift-4" class="4 tooltip btn"><span class="BTNletter">4</span><span class="BTNtext">LIVE 4 til DVE inp 1</span><span class="tooltiptext"></span></div>
+	<div id="shift-5" class="5 tooltip btn"><span class="BTNletter">5</span><span class="BTNtext">LIVE 5 til DVE inp 1</span><span class="tooltiptext"></span></div>
+	<div id="shift-6" class="6 tooltip btn"><span class="BTNletter">6</span><span class="BTNtext">LIVE 6 til DVE inp 1</span><span class="tooltiptext"></span></div>
+	<div id="shift-7" class="7 tooltip btn"><span class="BTNletter">7</span><span class="BTNtext">LIVE 7 til DVE inp 1</span><span class="tooltiptext"></span></div>
+	<div id="shift-8" class="8 tooltip btn"><span class="BTNletter">8</span><span class="BTNtext">LIVE 8 til DVE inp 1</span><span class="tooltiptext"></span></div>
+	<div id="shift-9" class="9 tooltip btn"><span class="BTNletter">9</span><span class="BTNtext">LIVE 9 til DVE inp 1</span><span class="tooltiptext"></span></div>
+	<div id="shift-0" class="10 tooltip btn"><span class="BTNletter">0</span><span class="BTNtext">LIVE 10 til DVE inp 1</span><span class="tooltiptext"></span></div>
+	<div id="shift-plusSign" class="plusSign tooltip btn"><span class="BTNletter">+</span><span class="BTNtext"></span></div>
+	<div id="shift-diacriticalMarkSign " class="diacriticalMarkSign tooltip btn"><span class="BTNletter">´</span><span class="BTNtext"></span></div><!-- ´-->
+	<div id="shift-backspace" class="backspace tooltip btn"><span class="BTNletter">backspace</span><span class="BTNtext"></span></div>
+	</div>
+	<!-- ROW 3 -->
+	<div id="shift-row3" class="row3 rowContainer">
+	<div id="shift-tab" class="tab tooltip btn"><span class="BTNletter">TAB</span></div>
+	<div id="shift-Q"  class="Q tooltip btn"><span class="BTNletter">Q</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="shift-W"  class="W tooltip btn"><span class="BTNletter">W</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="shift-E"  class="E tooltip btn"><span class="BTNletter">E</span><span class="BTNtext">EVS til DVE inp 1</span><span class="tooltiptext"></span></div>
+	<div id="shift-R"  class="R tooltip btn"><span class="BTNletter">R</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="shift-T" class="T tooltip  btn"><span class="BTNletter">T</span><span class="BTNtext">SERV A til DVE inp 1</span><span class="tooltiptext"></span></div>
+	<div id="shift-Y" class="Y tooltip  btn"><span class="BTNletter">Y</span><span class="BTNtext">SERV B til DVE inp 1</span><span class="tooltiptext"></span></div>
+	<div id="shift-U"  class="U btn"><span class="BTNletter">U</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="shift-I" class="I btn"><span class="BTNletter">I</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="shift-O" class="O btn"><span class="BTNletter">O</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="shift-P"  class="P btn"><span class="BTNletter">P</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="shift-Å" class="Å btn"><span class="BTNletter">Å</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="shift-umlautSign" class="umlautSign btn"><span class="BTNletter">¨</span><span class="BTNtext"></span><span class="tooltiptext"></span></div><!-- ¨ -->
+		<div id="shift-insert" class="insert tooltip btn"><span class="BTNletter">INS</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+			<div id="shift-home" class="home tooltip btn"><span class="BTNletter">HOME</span><span class="BTNtext">sidste ovl af</span><span class="tooltiptext"></span></div>
+			<div id="shift-pup" class="pup tooltip btn"><span class="BTNletter">PGDUP</span><span class="BTNtext">Sec audio op</span><span class="tooltiptext"></span></div>
+	</div>
+	<!-- ROW 4 -->
+	<div id="shift-row4" class="row4 rowContainer">
+	<div id="shift-A" class="A tooltip btn"><span class="BTNletter">A</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="shift-S" class="S btn"><span class="BTNletter">S</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="shift-D" class="D btn"><span class="BTNletter">D</span><span class="BTNtext">EVS til DVE inp 1</span><span class="tooltiptext"></span></div>
+	<div id="shift-F" class="F btn"><span class="BTNletter">F</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="shift-G" class="G tooltip btn"><span class="BTNletter">G</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="shift-H" class="H tooltip btn"><span class="BTNletter">H</span><span class="BTNtext">Undo HOLD</span><span class="tooltiptext"></span></div>
+	<div id="shift-J" class="J tooltip btn"><span class="BTNletter">J</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="shift-K" class="K btn"><span class="BTNletter">K</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="shift-L" class="L btn"><span class="BTNletter">L</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="shift-Æ" class="Æ btn"><span class="BTNletter">Æ</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="shift-Ø" class="Ø tooltip  btn"><span class="BTNletter">Ø</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="shift-apostropheSign" class="apostropheSign tooltip btn"><span class="BTNletter">'</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+		<div id="shift-delete" class="delete tooltip btn"><span class="BTNletter">DEL</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+			<div id="shift-end" class="end tooltip btn"><span class="BTNletter">END</span><span class="BTNtext">DSK 1 on/off</span><span class="tooltiptext"></span></div>
+			<div id="shift-pdown" class="pdown tooltip btn"><span class="BTNletter">PGDO</span><span class="BTNtext">sec audio ned</span><span class="tooltiptext"></span></div>
+	</div>
+	<!-- ROW 5 -->
+	<div id="shift-row5" class="row5 rowContainer">
+	 <div id="shift-shift" class="shift tooltip btn"><span class="BTNletter">SHIFT</span><span class="BTNtext"></span></div>
+	<div id="shift-lessThanSign" class="lessThanSign tooltip btn"><span class="BTNletter">&lt;</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="shift-Z" class="Z tooltip  btn"><span class="BTNletter">Z</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="shift-X" class="X tooltip btn"><span class="BTNletter">X</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="shift-C" class="C tooltip  btn"><span class="BTNletter">C</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="shift-V" class="V btn"><span class="BTNletter">V</span><span class="BTNtext"></span></div>
+	<div id="shift-B" class="B btn"><span class="BTNletter">B</span><span class="BTNtext"></span></div>
+	<div id="shift-N" class="N btn"><span class="BTNletter">N</span><span class="BTNtext"></span></div>
+	<div id="shift-M" class="M btn"><span class="BTNletter">M</span><span class="BTNtext"></span></div>
+	<div id="shift-commasign" class="commasign btn"><span class="BTNletter">,</span><span class="BTNtext"></span></div>
+	<div id="shift-punktSign" class="punktSign btn"><span class="BTNletter">.</span><span class="BTNtext"></span></div>
+	<div id="shift-hyphenSign" class="hyphenSign btn"><span class="BTNletter">-</span><span class="BTNtext"></span></div>
+		<div id="shift-op" class="op btn"><span class="BTNletter">op</span><span class="BTNtext">Rundown OP</span></div>
+   
+	</div>
+	<!-- ROW 6 -->
+	<div id="shift-row6" class="row6 rowContainer">
+	 <div id="shift-ctrlleft" class="ctrlleft tooltip btn"><span class="BTNletter">CTRL</span><span class="BTNtext"></span></div>
+	<div id="shift-windows" class="windows tooltip  btn"><span class="BTNletter">WIN</span><span class="BTNtext"></span></div>
+	<div id="shift-alt" class="alt tooltip  btn"><span class="BTNletter">ALT</span><span class="BTNtext"></span></div>
+	<div id="shift-space" class="space tooltip btn"><span class="BTNletter">Space</span><span class="BTNtext"></span></div>
+	<div id="shift-altgr" class="altgr tooltip  btn"><span class="BTNletter">AltGr</span><span class="BTNtext"></span></div>
+	<div id="shift-ctrlright" class="ctrlright btn"><span class="BTNletter">ctrl</span><span class="BTNtext"></span></div>
+		<div id="shift-venstre" class="venstre btn"><span class="BTNletter">venstre</span><span class="BTNtext">Rundown Tilbae</span></div>
+	<div id="shift-ned" class="ned btn"><span class="BTNletter">ned</span><span class="BTNtext">Rundown Ned</span></div>
+	<div id="shift-hoejre" class="hoejre btn"><span class="BTNletter">Højre</span><span class="BTNtext">Rundown Frem</span></div>
+	
+	
+	</div>
+</div><!-- shiftlayer -->
+	
+	
+<div id="ctrlLayer">	
+	<!-- ROW 1 -->
+	<div id="ctrl-row1" class="row1 rowContainer">
+	<div id="ctrl-ESC" class="esc btn"><span class="BTNletter">ESC</span></div>
+	<div id="ctrl-ESC-space" class="esc-space"></div>
+	<div id="ctrl-F1" class="F1 tooltip btn"><span class="BTNletter">F1</span><span class="BTNtext">Kam1</span><span class="tooltiptext"></span></div>
+	<div id="ctrl-F2" class="F2 tooltip btn"><span class="BTNletter">F2</span><span class="BTNtext">Kam2</span><span class="tooltiptext"></span></div>
+	<div id="ctrl-F3" class="F3 tooltip btn"><span class="BTNletter">F3</span><span class="BTNtext">Kam3</span><span class="tooltiptext"></span></div>
+	<div id="ctrl-F4" class="F4 tooltip btn"><span class="BTNletter">F4</span><span class="BTNtext">Kam4</span><span class="tooltiptext"></span></div>
+	<div id="ctrl-F5" class="F5 btn"><span class="BTNletter">F5</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-F6" class="F6 tooltip btn"><span class="BTNletter">F6</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-F7" class="F7 tooltip btn"><span class="BTNletter">F7</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-F8" class="F8 tooltip btn"><span class="BTNletter">F8</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-F9" class="F9 tooltip btn"><span class="BTNletter">F9</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-F10" class="F10 btn"><span class="BTNletter">F10</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-F11" class="F11 tooltip btn"><span class="BTNletter">F11</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-F12" class="F12 tooltip btn"><span class="BTNletter">F12</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+			<div class="layerTxt">DVE INP 2</div>
+	</div>
+	<!-- ROW 2 START-->
+	<div id="ctrl-row2" class="row2 rowContainer">
+	<div id="ctrl-sectionSign" class="btn"><span class="BTNletter">§</span><span class="BTNtext"></span></div><!-- §-->
+	<div id="ctrl-1" class="1 tooltip btn"><span class="BTNletter">1</span><span class="BTNtext">LIVE 1 til DVE inp 2</span><span class="tooltiptext"></span></div>
+	<div id="ctrl-2" class="2 tooltip btn"><span class="BTNletter">2</span><span class="BTNtext">LIVE 2 til DVE inp 2</span><span class="tooltiptext"></span></div>
+	<div id="ctrl-3" class="3 tooltip btn"><span class="BTNletter">3</span><span class="BTNtext">LIVE 3 til DVE inp 2</span><span class="tooltiptext"></span></div>
+	<div id="ctrl-4" class="4 tooltip btn"><span class="BTNletter">4</span><span class="BTNtext">LIVE 4 til DVE inp 2</span><span class="tooltiptext"></span></div>
+	<div id="ctrl-5" class="5 tooltip btn"><span class="BTNletter">5</span><span class="BTNtext">LIVE 5 til DVE inp 2</span><span class="tooltiptext"></span></div>
+	<div id="ctrl-6" class="6 tooltip btn"><span class="BTNletter">6</span><span class="BTNtext">LIVE 6 til DVE inp 2</span><span class="tooltiptext"></span></div>
+	<div id="ctrl-7" class="7 tooltip btn"><span class="BTNletter">7</span><span class="BTNtext">LIVE 7 til DVE inp 2</span><span class="tooltiptext"></span></div>
+	<div id="ctrl-8" class="8 tooltip btn"><span class="BTNletter">8</span><span class="BTNtext">LIVE 8 til DVE inp 2</span><span class="tooltiptext"></span></div>
+	<div id="ctrl-9" class="9 tooltip btn"><span class="BTNletter">9</span><span class="BTNtext">LIVE 9 til DVE inp 2</span><span class="tooltiptext"></span></div>
+	<div id="ctrl-0" class="10 tooltip btn"><span class="BTNletter">0</span><span class="BTNtext">LIVE 10 til DVE inp 2</span><span class="tooltiptext"></span></div>
+	<div id="ctrl-plusSign" class="plusSign tooltip btn"><span class="BTNletter">+</span><span class="BTNtext"></span></div>
+	<div id="ctrl-diacriticalMarkSign " class="diacriticalMarkSign tooltip btn"><span class="BTNletter">´</span><span class="BTNtext"></span></div><!-- ´-->
+	<div id="ctrl-backspace" class="backspace tooltip btn"><span class="BTNletter">backspace</span><span class="BTNtext">Log fejl</span></div>
+	</div>
+	<!-- ROW 3 -->
+	<div id="ctrl-row3" class="row3 rowContainer">
+	<div id="ctrl-tab" class="tab tooltip btn"><span class="BTNletter">TAB</span></div>
+	<div id="ctrl-Q"  class="Q tooltip btn"><span class="BTNletter">Q</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-W"  class="W tooltip btn"><span class="BTNletter">W</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-E"  class="E tooltip btn"><span class="BTNletter">E</span><span class="BTNtext">EVS til DVE inp 2</span><span class="tooltiptext"></span></div>
+	<div id="ctrl-R"  class="R tooltip btn"><span class="BTNletter">R</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-T" class="T tooltip  btn"><span class="BTNletter">T</span><span class="BTNtext">SERVA til DVE inp 2</span><span class="tooltiptext"></span></div>
+	<div id="ctrl-Y" class="Y tooltip  btn"><span class="BTNletter">Y</span><span class="BTNtext">SERVB til DVE inp 2</span><span class="tooltiptext"></span></div>
+	<div id="ctrl-U"  class="U btn"><span class="BTNletter">U</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-I" class="I btn"><span class="BTNletter">I</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-O" class="O btn"><span class="BTNletter">O</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-P"  class="P btn"><span class="BTNletter">P</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-Å" class="Å btn"><span class="BTNletter">Å</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-umlautSign" class="umlautSign btn"><span class="BTNletter">¨</span><span class="BTNtext"></span><span class="tooltiptext"></span></div><!-- ¨ -->
+		<div id="ctrl-insert" class="insert tooltip btn"><span class="BTNletter">INS</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+			<div id="ctrl-home" class="home tooltip btn"><span class="BTNletter">HOME</span><span class="BTNtext">sidste ovl af</span><span class="tooltiptext"></span></div>
+			<div id="ctrl-pup" class="pup tooltip btn"><span class="BTNletter">PGDUP</span><span class="BTNtext">Sec audio op</span><span class="tooltiptext"></span></div>
+	</div>
+	<!-- ROW 4 -->
+	<div id="ctrl-row4" class="row4 rowContainer">
+	<div id="ctrl-A" class="A tooltip btn"><span class="BTNletter">A</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-S" class="S btn"><span class="BTNletter">S</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-D" class="D btn"><span class="BTNletter">D</span><span class="BTNtext">EVS til DVE inp 2</span><span class="tooltiptext"></span></div>
+	<div id="ctrl-F" class="F btn"><span class="BTNletter">F</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-G" class="G tooltip btn"><span class="BTNletter">G</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-H" class="H tooltip btn"><span class="BTNletter">H</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-J" class="J tooltip btn"><span class="BTNletter">J</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-K" class="K btn"><span class="BTNletter">K</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-L" class="L btn"><span class="BTNletter">L</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-Æ" class="Æ btn"><span class="BTNletter">Æ</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-Ø" class="Ø tooltip  btn"><span class="BTNletter">Ø</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-apostropheSign" class="apostropheSign tooltip btn"><span class="BTNletter">'</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+		<div id="ctrl-delete" class="delete tooltip btn"><span class="BTNletter">DEL</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+			<div id="ctrl-end" class="end tooltip btn"><span class="BTNletter">END</span><span class="BTNtext">DSK 1 on/off</span><span class="tooltiptext"></span></div>
+			<div id="ctrl-pdown" class="pdown tooltip btn"><span class="BTNletter">PGDO</span><span class="BTNtext">sec audio ned</span><span class="tooltiptext"></span></div>
+	</div>
+	<!-- ROW 5 -->
+	<div id="ctrl-row5" class="row5 rowContainer">
+	 <div id="ctrl-shift" class="shift tooltip btn"><span class="BTNletter">SHIFT</span><span class="BTNtext"></span></div>
+	<div id="ctrl-lessThanSign" class="lessThanSign tooltip btn"><span class="BTNletter">&lt;</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-Z" class="Z tooltip  btn"><span class="BTNletter">Z</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-X" class="X tooltip btn"><span class="BTNletter">X</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-C" class="C tooltip  btn"><span class="BTNletter">C</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-V" class="V btn"><span class="BTNletter">V</span><span class="BTNtext"></span></div>
+	<div id="ctrl-B" class="B btn"><span class="BTNletter">B</span><span class="BTNtext"></span></div>
+	<div id="ctrl-N" class="N btn"><span class="BTNletter">N</span><span class="BTNtext"></span></div>
+	<div id="ctrl-M" class="M btn"><span class="BTNletter">M</span><span class="BTNtext"></span></div>
+	<div id="ctrl-commasign" class="commasign btn"><span class="BTNletter">,</span><span class="BTNtext"></span></div>
+	<div id="ctrl-punktSign" class="punktSign btn"><span class="BTNletter">.</span><span class="BTNtext"></span></div>
+	<div id="ctrl-hyphenSign" class="hyphenSign btn"><span class="BTNletter">-</span><span class="BTNtext"></span></div>
+		<div id="ctrl-op" class="op btn"><span class="BTNletter">op</span><span class="BTNtext">Rundown OP</span></div>
+	
+	</div>
+	<!-- ROW 6 -->
+	<div id="ctrl-row6" class="row6 rowContainer">
+	 <div id="ctrl-ctrlleft" class="ctrlleft tooltip btn"><span class="BTNletter">CTRL</span><span class="BTNtext"></span></div>
+	<div id="ctrl-windows" class="windows tooltip  btn"><span class="BTNletter">WIN</span><span class="BTNtext"></span></div>
+	<div id="ctrl-alt" class="alt tooltip  btn"><span class="BTNletter">ALT</span><span class="BTNtext"></span></div>
+	<div id="ctrl-space" class="space tooltip btn"><span class="BTNletter">Space</span><span class="BTNtext"></span></div>
+	<div id="ctrl-altgr" class="altgr tooltip  btn"><span class="BTNletter">AltGr</span><span class="BTNtext"></span></div>
+	<div id="ctrl-ctrlright" class="ctrlright btn"><span class="BTNletter">ctrl</span><span class="BTNtext"></span></div>
+		<div id="ctrl-venstre" class="venstre btn"><span class="BTNletter">venstre</span><span class="BTNtext">Rundown Tilbae</span></div>
+	<div id="ctrl-ned" class="ned btn"><span class="BTNletter">ned</span><span class="BTNtext">Rundown Ned</span></div>
+	<div id="ctrl-hoejre" class="hoejre btn"><span class="BTNletter">Højre</span><span class="BTNtext">Rundown Frem</span></div>
+	
+	
+	</div>
+</div><!-- ctrllayer -->
+	
+	
+	
+<div id="altLayer">	
+	<!-- ROW 1 -->
+	<div id="alt-row1" class="row1 rowContainer">
+	<div id="alt-ESC" class="esc btn"><span class="BTNletter">ESC</span></div>
+	<div id="alt-ESC-space" class="esc-space"></div>
+	<div id="alt-F1" class="F1 tooltip btn"><span class="BTNletter">F1</span><span class="BTNtext">Kam1</span><span class="tooltiptext"></span></div>
+	<div id="alt-F2" class="F2 tooltip btn"><span class="BTNletter">F2</span><span class="BTNtext">Kam2</span><span class="tooltiptext"></span></div>
+	<div id="alt-F3" class="F3 tooltip btn"><span class="BTNletter">F3</span><span class="BTNtext">Kam3</span><span class="tooltiptext"></span></div>
+	<div id="alt-F4" class="F4 tooltip btn"><span class="BTNletter">F4</span><span class="BTNtext">Kam4</span><span class="tooltiptext"></span></div>
+	<div id="alt-F5" class="F5 btn"><span class="BTNletter">F5</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="alt-F6" class="F6 tooltip btn"><span class="BTNletter">F6</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="alt-F7" class="F7 tooltip btn"><span class="BTNletter">F7</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="alt-F8" class="F8 tooltip btn"><span class="BTNletter">F8</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="alt-F9" class="F9 tooltip btn"><span class="BTNletter">F9</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="alt-F10" class="F10 btn"><span class="BTNletter">F10</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="alt-F11" class="F11 tooltip btn"><span class="BTNletter">F11</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="alt-F12" class="F12 tooltip btn"><span class="BTNletter">F12</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+			<div class="layerTxt">TIL VIZ OVL</div>
+	</div>
+	<!-- ROW 2 START-->
+	<div id="alt-row2" class="row2 rowContainer">
+	<div id="alt-sectionSign" class="btn"><span class="BTNletter">§</span><span class="BTNtext">ØVE Rundown</span></div><!-- §-->
+	<div id="alt-1" class="1 tooltip btn"><span class="BTNletter">1</span><span class="BTNtext">LIVE 1</span><span class="tooltiptext"></span></div>
+	<div id="alt-2" class="2 tooltip btn"><span class="BTNletter">2</span><span class="BTNtext">LIVE 2</span><span class="tooltiptext"></span></div>
+	<div id="alt-3" class="3 tooltip btn"><span class="BTNletter">3</span><span class="BTNtext">LIVE 3</span><span class="tooltiptext"></span></div>
+	<div id="alt-4" class="4 tooltip btn"><span class="BTNletter">4</span><span class="BTNtext">LIVE 4</span><span class="tooltiptext"></span></div>
+	<div id="alt-5" class="5 tooltip btn"><span class="BTNletter">5</span><span class="BTNtext">LIVE 5</span><span class="tooltiptext"></span></div>
+	<div id="alt-6" class="6 tooltip btn"><span class="BTNletter">6</span><span class="BTNtext">LIVE 6</span><span class="tooltiptext"></span></div>
+	<div id="alt-7" class="7 tooltip btn"><span class="BTNletter">7</span><span class="BTNtext">LIVE 7</span><span class="tooltiptext"></span></div>
+	<div id="alt-8" class="8 tooltip btn"><span class="BTNletter">8</span><span class="BTNtext">LIVE 8</span><span class="tooltiptext"></span></div>
+	<div id="alt-9" class="9 tooltip btn"><span class="BTNletter">9</span><span class="BTNtext">LIVE 9</span><span class="tooltiptext"></span></div>
+	<div id="alt-0" class="10 tooltip btn"><span class="BTNletter">0</span><span class="BTNtext">LIVE 10</span><span class="tooltiptext"></span></div>
+	<div id="alt-plusSign" class="plusSign tooltip btn"><span class="BTNletter">+</span><span class="BTNtext"></span></div>
+	<div id="alt-diacriticalMarkSign " class="diacriticalMarkSign tooltip btn"><span class="BTNletter">´</span><span class="BTNtext"></span></div><!-- ´-->
+	<div id="alt-backspace" class="backspace tooltip btn"><span class="BTNletter">backspace</span><span class="BTNtext"></span></div>
+	</div>
+	<!-- ROW 3 -->
+	<div id="alt-row3" class="row3 rowContainer">
+	<div id="alt-tab" class="tab tooltip btn"><span class="BTNletter">TAB</span></div>
+	<div id="alt-Q"  class="Q tooltip btn"><span class="BTNletter">Q</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="alt-W"  class="W tooltip btn"><span class="BTNletter">W</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="alt-E"  class="E tooltip btn"><span class="BTNletter">E</span><span class="BTNtext">EVS til Viz ovl</span><span class="tooltiptext"></span></div>
+	<div id="alt-R"  class="R tooltip btn"><span class="BTNletter">R</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="alt-T" class="T tooltip  btn"><span class="BTNletter">T</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="alt-Y" class="Y tooltip  btn"><span class="BTNletter">Y</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="alt-U"  class="U btn"><span class="BTNletter">U</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="alt-I" class="I btn"><span class="BTNletter">I</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="alt-O" class="O btn"><span class="BTNletter">O</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="alt-P"  class="P btn"><span class="BTNletter">P</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="alt-Å" class="Å btn"><span class="BTNletter">Å</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="alt-umlautSign" class="umlautSign btn"><span class="BTNletter">¨</span><span class="BTNtext"></span><span class="tooltiptext"></span></div><!-- ¨ -->
+		<div id="alt-insert" class="insert tooltip btn"><span class="BTNletter">INS</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+			<div id="alt-home" class="home tooltip btn"><span class="BTNletter">HOME</span><span class="BTNtext">sidste ovl af</span><span class="tooltiptext"></span></div>
+			<div id="alt-pup" class="pup tooltip btn"><span class="BTNletter">PGDUP</span><span class="BTNtext">Sec audio op</span><span class="tooltiptext"></span></div>
+	</div>
+	<!-- ROW 4 -->
+	<div id="alt-row4" class="row4 rowContainer">
+	<div id="alt-A" class="A tooltip btn"><span class="BTNletter">A</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="alt-S" class="S btn"><span class="BTNletter">S</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="alt-D" class="D btn"><span class="BTNletter">D</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="alt-F" class="F btn"><span class="BTNletter">F</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="alt-G" class="G tooltip btn"><span class="BTNletter">G</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="alt-H" class="H tooltip btn"><span class="BTNletter">H</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="alt-J" class="J tooltip btn"><span class="BTNletter">J</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="alt-K" class="K btn"><span class="BTNletter">K</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="alt-L" class="L btn"><span class="BTNletter">L</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="alt-Æ" class="Æ btn"><span class="BTNletter">Æ</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="alt-Ø" class="Ø tooltip  btn"><span class="BTNletter">Ø</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="alt-apostropheSign" class="apostropheSign tooltip btn"><span class="BTNletter">'</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+		<div id="alt-delete" class="delete tooltip btn"><span class="BTNletter">DEL</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+			<div id="alt-end" class="end tooltip btn"><span class="BTNletter">END</span><span class="BTNtext">DSK 1 on/off</span><span class="tooltiptext"></span></div>
+			<div id="alt-pdown" class="pdown tooltip btn"><span class="BTNletter">PGDO</span><span class="BTNtext">sec audio ned</span><span class="tooltiptext"></span></div>
+	</div>
+	<!-- ROW 5 -->
+	<div id="alt-row5" class="row5 rowContainer">
+	 <div id="alt-shift" class="shift tooltip btn"><span class="BTNletter">SHIFT</span><span class="BTNtext"></span></div>
+	<div id="alt-lessThanSign" class="lessThanSign tooltip btn"><span class="BTNletter">&lt;</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="alt-Z" class="Z tooltip  btn"><span class="BTNletter">Z</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="alt-X" class="X tooltip btn"><span class="BTNletter">X</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="alt-C" class="C tooltip  btn"><span class="BTNletter">C</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="alt-V" class="V btn"><span class="BTNletter">V</span><span class="BTNtext"></span></div>
+	<div id="alt-B" class="B btn"><span class="BTNletter">B</span><span class="BTNtext"></span></div>
+	<div id="alt-N" class="N btn"><span class="BTNletter">N</span><span class="BTNtext"></span></div>
+	<div id="alt-M" class="M btn"><span class="BTNletter">M</span><span class="BTNtext"></span></div>
+	<div id="alt-commasign" class="commasign btn"><span class="BTNletter">,</span><span class="BTNtext"></span></div>
+	<div id="alt-punktSign" class="punktSign btn"><span class="BTNletter">.</span><span class="BTNtext"></span></div>
+	<div id="alt-hyphenSign" class="hyphenSign btn"><span class="BTNletter">-</span><span class="BTNtext"></span></div>
+		<div id="alt-op" class="op btn"><span class="BTNletter">op</span><span class="BTNtext">Rundown OP</span></div>
+	
+	</div>
+	<!-- ROW 6 -->
+	<div id="alt-row6" class="row6 rowContainer">
+	 <div id="alt-ctrlleft" class="ctrlleft tooltip btn"><span class="BTNletter">CTRL</span><span class="BTNtext"></span></div>
+	<div id="alt-windows" class="windows tooltip  btn"><span class="BTNletter">WIN</span><span class="BTNtext"></span></div>
+	<div id="alt-alt" class="alt tooltip  btn"><span class="BTNletter">ALT</span><span class="BTNtext"></span></div>
+	<div id="alt-space" class="space tooltip btn"><span class="BTNletter">Space</span><span class="BTNtext"></span></div>
+	<div id="alt-altgr" class="altgr tooltip  btn"><span class="BTNletter">AltGr</span><span class="BTNtext"></span></div>
+	<div id="alt-ctrlright" class="ctrlright btn"><span class="BTNletter">ctrl</span><span class="BTNtext"></span></div>
+		<div id="alt-venstre" class="venstre btn"><span class="BTNletter">venstre</span><span class="BTNtext">Rundown Tilbae</span></div>
+	<div id="alt-ned" class="ned btn"><span class="BTNletter">ned</span><span class="BTNtext">Rundown Ned</span></div>
+	<div id="alt-hoejre" class="hoejre btn"><span class="BTNletter">Højre</span><span class="BTNtext">Rundown Frem</span></div>
+	
+	
+	</div>
+</div><!-- altlayer -->	
+	
+<div id="ctrl-shiftLayer">	
+	<!-- ROW 1 -->
+	<div id="ctrl-shift-row1" class="row1 rowContainer">
+	<div id="ctrl-shift-ESC" class="esc btn"><span class="BTNletter">ESC</span></div>
+	<div id="ctrl-shift-ESC-space" class="esc-space"></div>
+	<div id="ctrl-shift-F1" class="F1 tooltip btn"><span class="BTNletter">F1</span><span class="BTNtext">Kam1</span><span class="tooltiptext"></span></div>
+	<div id="ctrl-shift-F2" class="F2 tooltip btn"><span class="BTNletter">F2</span><span class="BTNtext">Kam2</span><span class="tooltiptext"></span></div>
+	<div id="ctrl-shift-F3" class="F3 tooltip btn"><span class="BTNletter">F3</span><span class="BTNtext">Kam3</span><span class="tooltiptext"></span></div>
+	<div id="ctrl-shift-F4" class="F4 tooltip btn"><span class="BTNletter">F4</span><span class="BTNtext">Kam4</span><span class="tooltiptext"></span></div>
+	<div id="ctrl-shift-F5" class="F5 btn"><span class="BTNletter">F5</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-shift-F6" class="F6 tooltip btn"><span class="BTNletter">F6</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-shift-F7" class="F7 tooltip btn"><span class="BTNletter">F7</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-shift-F8" class="F8 tooltip btn"><span class="BTNletter">F8</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-shift-F9" class="F9 tooltip btn"><span class="BTNletter">F9</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-shift-F10" class="F10 btn"><span class="BTNletter">F10</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-shift-F11" class="F11 tooltip btn"><span class="BTNletter">F11</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-shift-F12" class="F12 tooltip btn"><span class="BTNletter">F12</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+			<div class="layerTxt">TIL SS</div>
+	</div>
+	<!-- ROW 2 START-->
+	<div id="ctrl-shift-row2" class="row2 rowContainer">
+	<div id="ctrl-shift-sectionSign" class="btn"><span class="BTNletter">§</span><span class="BTNtext">Deaktiver Rundown</span></div><!-- §-->
+	<div id="ctrl-shift-1" class="1 tooltip btn"><span class="BTNletter">1</span><span class="BTNtext">LIVE 1 til SS</span><span class="tooltiptext"></span></div>
+	<div id="ctrl-shift-2" class="2 tooltip btn"><span class="BTNletter">2</span><span class="BTNtext">LIVE 2 til SS</span><span class="tooltiptext"></span></div>
+	<div id="ctrl-shift-3" class="3 tooltip btn"><span class="BTNletter">3</span><span class="BTNtext">LIVE 3 til SS</span><span class="tooltiptext"></span></div>
+	<div id="ctrl-shift-4" class="4 tooltip btn"><span class="BTNletter">4</span><span class="BTNtext">LIVE 4 til SS</span><span class="tooltiptext"></span></div>
+	<div id="ctrl-shift-5" class="5 tooltip btn"><span class="BTNletter">5</span><span class="BTNtext">LIVE 5 til SS</span><span class="tooltiptext"></span></div>
+	<div id="ctrl-shift-6" class="6 tooltip btn"><span class="BTNletter">6</span><span class="BTNtext">LIVE 6 til SS</span><span class="tooltiptext"></span></div>
+	<div id="ctrl-shift-7" class="7 tooltip btn"><span class="BTNletter">7</span><span class="BTNtext">LIVE 7 til SS</span><span class="tooltiptext"></span></div>
+	<div id="ctrl-shift-8" class="8 tooltip btn"><span class="BTNletter">8</span><span class="BTNtext">LIVE 8 til SS</span><span class="tooltiptext"></span></div>
+	<div id="ctrl-shift-9" class="9 tooltip btn"><span class="BTNletter">9</span><span class="BTNtext">LIVE 9 til SS</span><span class="tooltiptext"></span></div>
+	<div id="ctrl-shift-0" class="10 tooltip btn"><span class="BTNletter">0</span><span class="BTNtext">LIVE 10 SS</span><span class="tooltiptext"></span></div>
+	<div id="ctrl-shift-plusSign" class="plusSign tooltip btn"><span class="BTNletter">+</span><span class="BTNtext"></span></div>
+	<div id="ctrl-shift-diacriticalMarkSign " class="diacriticalMarkSign tooltip btn"><span class="BTNletter">´</span><span class="BTNtext"></span></div><!-- ´-->
+	<div id="ctrl-shift-backspace" class="backspace tooltip btn"><span class="BTNletter">backspace</span><span class="BTNtext"></span></div>
+	</div>
+	<!-- ROW 3 -->
+	<div id="ctrl-shift-row3" class="row3 rowContainer">
+	<div id="ctrl-shift-tab" class="tab tooltip btn"><span class="BTNletter">TAB</span></div>
+	<div id="ctrl-shift-Q"  class="Q tooltip btn"><span class="BTNletter">Q</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-shift-W"  class="W tooltip btn"><span class="BTNletter">W</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-shift-E"  class="E tooltip btn"><span class="BTNletter">E</span><span class="BTNtext">EVS til SS</span><span class="tooltiptext"></span></div>
+	<div id="ctrl-shift-R"  class="R tooltip btn"><span class="BTNletter">R</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-shift-T" class="T tooltip  btn"><span class="BTNletter">T</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-shift-Y" class="Y tooltip  btn"><span class="BTNletter">Y</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-shift-U"  class="U btn"><span class="BTNletter">U</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-shift-I" class="I btn"><span class="BTNletter">I</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-shift-O" class="O btn"><span class="BTNletter">O</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-shift-P"  class="P btn"><span class="BTNletter">P</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-shift-Å" class="Å btn"><span class="BTNletter">Å</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-shift-umlautSign" class="umlautSign btn"><span class="BTNletter">¨</span><span class="BTNtext"></span><span class="tooltiptext"></span></div><!-- ¨ -->
+		<div id="ctrl-shift-insert" class="insert tooltip btn"><span class="BTNletter">INS</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+			<div id="ctrl-shift-home" class="home tooltip btn"><span class="BTNletter">HOME</span><span class="BTNtext">sidste ovl af</span><span class="tooltiptext"></span></div>
+			<div id="ctrl-shift-pup" class="pup tooltip btn"><span class="BTNletter">PGDUP</span><span class="BTNtext">Sec audio op</span><span class="tooltiptext"></span></div>
+	</div>
+	<!-- ROW 4 -->
+	<div id="ctrl-shift-row4" class="row4 rowContainer">
+	<div id="ctrl-shift-A" class="A tooltip btn"><span class="BTNletter">A</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-shift-S" class="S btn"><span class="BTNletter">S</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-shift-D" class="D btn"><span class="BTNletter">D</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-shift-F" class="F btn"><span class="BTNletter">F</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-shift-G" class="G tooltip btn"><span class="BTNletter">G</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-shift-H" class="H tooltip btn"><span class="BTNletter">H</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-shift-J" class="J tooltip btn"><span class="BTNletter">J</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-shift-K" class="K btn"><span class="BTNletter">K</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-shift-L" class="L btn"><span class="BTNletter">L</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-shift-Æ" class="Æ btn"><span class="BTNletter">Æ</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-shift-Ø" class="Ø tooltip  btn"><span class="BTNletter">Ø</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-shift-apostropheSign" class="apostropheSign tooltip btn"><span class="BTNletter">'</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+		<div id="ctrl-shift-delete" class="delete tooltip btn"><span class="BTNletter">DEL</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+			<div id="ctrl-shift-end" class="end tooltip btn"><span class="BTNletter">END</span><span class="BTNtext">DSK 1 on/off</span><span class="tooltiptext"></span></div>
+			<div id="ctrl-shift-pdown" class="pdown tooltip btn"><span class="BTNletter">PGDO</span><span class="BTNtext">sec audio ned</span><span class="tooltiptext"></span></div>
+	</div>
+	<!-- ROW 5 -->
+	<div id="ctrl-shift-row5" class="row5 rowContainer">
+	 <div id="ctrl-shift-shift" class="shift tooltip btn"><span class="BTNletter">SHIFT</span><span class="BTNtext"></span></div>
+	<div id="ctrl-shift-lessThanSign" class="lessThanSign tooltip btn"><span class="BTNletter">&lt;</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-shift-Z" class="Z tooltip  btn"><span class="BTNletter">Z</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-shift-X" class="X tooltip btn"><span class="BTNletter">X</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-shift-C" class="C tooltip  btn"><span class="BTNletter">C</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-shift-V" class="V btn"><span class="BTNletter">V</span><span class="BTNtext"></span></div>
+	<div id="ctrl-shift-B" class="B btn"><span class="BTNletter">B</span><span class="BTNtext"></span></div>
+	<div id="ctrl-shift-N" class="N btn"><span class="BTNletter">N</span><span class="BTNtext"></span></div>
+	<div id="ctrl-shift-M" class="M btn"><span class="BTNletter">M</span><span class="BTNtext"></span></div>
+	<div id="ctrl-shift-commasign" class="commasign btn"><span class="BTNletter">,</span><span class="BTNtext"></span></div>
+	<div id="ctrl-shift-punktSign" class="punktSign btn"><span class="BTNletter">.</span><span class="BTNtext"></span></div>
+	<div id="ctrl-shift-hyphenSign" class="hyphenSign btn"><span class="BTNletter">-</span><span class="BTNtext"></span></div>
+		<div id="ctrl-shift-op" class="op btn"><span class="BTNletter">op</span><span class="BTNtext">Rundown OP</span></div>
+	
+	</div>
+	<!-- ROW 6 -->
+	<div id="ctrl-shift-row6" class="row6 rowContainer">
+	 <div id="ctrl-shift-ctrlleft" class="ctrlleft tooltip btn"><span class="BTNletter">CTRL</span><span class="BTNtext"></span></div>
+	<div id="ctrl-shift-windows" class="windows tooltip  btn"><span class="BTNletter">WIN</span><span class="BTNtext"></span></div>
+	<div id="ctrl-shift-alt" class="alt tooltip  btn"><span class="BTNletter">ALT</span><span class="BTNtext"></span></div>
+	<div id="ctrl-shift-space" class="space tooltip btn"><span class="BTNletter">Space</span><span class="BTNtext"></span></div>
+	<div id="ctrl-shift-altgr" class="altgr tooltip  btn"><span class="BTNletter">AltGr</span><span class="BTNtext"></span></div>
+	<div id="ctrl-shift-ctrlright" class="ctrlright btn"><span class="BTNletter">ctrl</span><span class="BTNtext"></span></div>
+		<div id="ctrl-shift-venstre" class="venstre btn"><span class="BTNletter">venstre</span><span class="BTNtext">Rundown Tilbae</span></div>
+	<div id="ctrl-shift-ned" class="ned btn"><span class="BTNletter">ned</span><span class="BTNtext">Rundown Ned</span></div>
+	<div id="ctrl-shift-hoejre" class="hoejre btn"><span class="BTNletter">Højre</span><span class="BTNtext">Rundown Frem</span></div>
+	
+	</div>
+</div><!-- ctrl shift layer -->
+	
+
+	
+	<div id="ctrl-altLayer">	
+	<!-- ROW 1 -->
+	<div id="ctrl-alt-row1" class="row1 rowContainer">
+	<div id="ctrl-alt-ESC" class="esc btn"><span class="BTNletter">ESC</span></div>
+	<div id="ctrl-alt-ESC-space" class="esc-space"></div>
+	<div id="ctrl-alt-F1" class="F1 tooltip btn"><span class="BTNletter">F1</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-F2" class="F2 tooltip btn"><span class="BTNletter">F2</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-F3" class="F3 tooltip btn"><span class="BTNletter">F3</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-F4" class="F4 tooltip btn"><span class="BTNletter">F4</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-F5" class="F5 btn"><span class="BTNletter">F5</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-F6" class="F6 tooltip btn"><span class="BTNletter">F6</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-F7" class="F7 tooltip btn"><span class="BTNletter">F7</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-F8" class="F8 tooltip btn"><span class="BTNletter">F8</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-F9" class="F9 tooltip btn"><span class="BTNletter">F9</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-F10" class="F10 btn"><span class="BTNletter">F10</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-F11" class="F11 tooltip btn"><span class="BTNletter">F11</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-F12" class="F12 tooltip btn"><span class="BTNletter">F12</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	</div>
+	<!-- ROW 2 START-->
+	<div id="ctrl-alt-row2" class="row2 rowContainer">
+	<div id="ctrl-alt-sectionSign" class="btn"><span class="BTNletter">§</span><span class="BTNtext"></span></div><!-- §-->
+	<div id="ctrl-alt-1" class="1 tooltip btn"><span class="BTNletter">1</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-2" class="2 tooltip btn"><span class="BTNletter">2</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-3" class="3 tooltip btn"><span class="BTNletter">3</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-4" class="4 tooltip btn"><span class="BTNletter">4</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-5" class="5 tooltip btn"><span class="BTNletter">5</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-6" class="6 tooltip btn"><span class="BTNletter">6</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-7" class="7 tooltip btn"><span class="BTNletter">7</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-8" class="8 tooltip btn"><span class="BTNletter">8</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-9" class="9 tooltip btn"><span class="BTNletter">9</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-0" class="10 tooltip btn"><span class="BTNletter">0</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-plusSign" class="plusSign tooltip btn"><span class="BTNletter">+</span><span class="BTNtext"></span></div>
+	<div id="ctrl-alt-diacriticalMarkSign " class="diacriticalMarkSign tooltip btn"><span class="BTNletter">´</span><span class="BTNtext"></span></div><!-- ´-->
+	<div id="ctrl-alt-backspace" class="backspace tooltip btn"><span class="BTNletter">backspace</span><span class="BTNtext"></span></div>
+	</div>
+	<!-- ROW 3 -->
+	<div id="ctrl-alt-row3" class="row3 rowContainer">
+	<div id="ctrl-alt-tab" class="tab tooltip btn"><span class="BTNletter">TAB</span></div>
+	<div id="ctrl-alt-Q"  class="Q tooltip btn"><span class="BTNletter">Q</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-W"  class="W tooltip btn"><span class="BTNletter">W</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-E"  class="E tooltip btn"><span class="BTNletter">E</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-R"  class="R tooltip btn"><span class="BTNletter">R</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-T" class="T tooltip  btn"><span class="BTNletter">T</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-Y" class="Y tooltip  btn"><span class="BTNletter">Y</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-U"  class="U btn"><span class="BTNletter">U</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-I" class="I btn"><span class="BTNletter">I</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-O" class="O btn"><span class="BTNletter">O</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-P"  class="P btn"><span class="BTNletter">P</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-Å" class="Å btn"><span class="BTNletter">Å</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-umlautSign" class="umlautSign btn"><span class="BTNletter">¨</span><span class="BTNtext"></span><span class="tooltiptext"></span></div><!-- ¨ -->
+		<div id="ctrl-alt-insert" class="insert tooltip btn"><span class="BTNletter">INS</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+			<div id="ctrl-alt-home" class="home tooltip btn"><span class="BTNletter">HOME</span><span class="BTNtext">sidste ovl af</span><span class="tooltiptext"></span></div>
+			<div id="ctrl-alt-pup" class="pup tooltip btn"><span class="BTNletter">PGDUP</span><span class="BTNtext">Sec audio op</span><span class="tooltiptext"></span></div>
+	</div>
+	<!-- ROW 4 -->
+	<div id="ctrl-alt-row4" class="row4 rowContainer">
+	<div id="ctrl-alt-A" class="A tooltip btn"><span class="BTNletter">A</span><span class="BTNtext">Design Style<br/> SC</span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-S" class="S btn"><span class="BTNletter">S</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-D" class="D btn"><span class="BTNletter">D</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-F" class="F btn"><span class="BTNletter">F</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-G" class="G tooltip btn"><span class="BTNletter">G</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-H" class="H tooltip btn"><span class="BTNletter">H</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-J" class="J tooltip btn"><span class="BTNletter">J</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-K" class="K btn"><span class="BTNletter">K</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-L" class="L btn"><span class="BTNletter">L</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-Æ" class="Æ btn"><span class="BTNletter">Æ</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-Ø" class="Ø tooltip  btn"><span class="BTNletter">Ø</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-apostropheSign" class="apostropheSign tooltip btn"><span class="BTNletter">'</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+		<div id="ctrl-alt-delete" class="delete tooltip btn"><span class="BTNletter">DEL</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+			<div id="ctrl-alt-end" class="end tooltip btn"><span class="BTNletter">END</span><span class="BTNtext">DSK 1 on/off</span><span class="tooltiptext"></span></div>
+			<div id="ctrl-alt-pdown" class="pdown tooltip btn"><span class="BTNletter">PGDO</span><span class="BTNtext">sec audio ned</span><span class="tooltiptext"></span></div>
+	</div>
+	<!-- ROW 5 -->
+	<div id="ctrl-alt-row5" class="row5 rowContainer">
+	 <div id="ctrl-alt-shift" class="shift tooltip btn"><span class="BTNletter">SHIFT</span><span class="BTNtext"></span></div>
+	<div id="ctrl-alt-lessThanSign" class="lessThanSign tooltip btn"><span class="BTNletter">&lt;</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-Z" class="Z tooltip  btn"><span class="BTNletter">Z</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-X" class="X tooltip btn"><span class="BTNletter">X</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-C" class="C tooltip  btn"><span class="BTNletter">C</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-V" class="V btn"><span class="BTNletter">V</span><span class="BTNtext"></span></div>
+	<div id="ctrl-alt-B" class="B btn"><span class="BTNletter">B</span><span class="BTNtext"></span></div>
+	<div id="ctrl-alt-N" class="N btn"><span class="BTNletter">N</span><span class="BTNtext"></span></div>
+	<div id="ctrl-alt-M" class="M btn"><span class="BTNletter">M</span><span class="BTNtext"></span></div>
+	<div id="ctrl-alt-commasign" class="commasign btn"><span class="BTNletter">,</span><span class="BTNtext"></span></div>
+	<div id="ctrl-alt-punktSign" class="punktSign btn"><span class="BTNletter">.</span><span class="BTNtext"></span></div>
+	<div id="ctrl-alt-hyphenSign" class="hyphenSign btn"><span class="BTNletter">-</span><span class="BTNtext"></span></div>
+		<div id="ctrl-alt-op" class="op btn"><span class="BTNletter">op</span><span class="BTNtext">Rundown OP</span></div>
+   
+	</div>
+	<!-- ROW 6 -->
+	<div id="ctrl-alt-row6" class="row6 rowContainer">
+	 <div id="ctrl-alt-ctrlleft" class="ctrlleft tooltip btn"><span class="BTNletter">CTRL</span><span class="BTNtext"></span></div>
+	<div id="ctrl-alt-windows" class="windows tooltip  btn"><span class="BTNletter">WIN</span><span class="BTNtext"></span></div>
+	<div id="ctrl-alt-alt" class="alt tooltip  btn"><span class="BTNletter">ALT</span><span class="BTNtext"></span></div>
+	<div id="ctrl-alt-space" class="space tooltip btn"><span class="BTNletter">Space</span><span class="BTNtext"></span></div>
+	<div id="ctrl-alt-altgr" class="altgr tooltip  btn"><span class="BTNletter">AltGr</span><span class="BTNtext"></span></div>
+	<div id="ctrl-alt-ctrlright" class="ctrlright btn"><span class="BTNletter">ctrl</span><span class="BTNtext"></span></div>
+		<div id="ctrl-alt-venstre" class="venstre btn"><span class="BTNletter">venstre</span><span class="BTNtext">Rundown Tilbae</span></div>
+	<div id="ctrl-alt-ned" class="ned btn"><span class="BTNletter">ned</span><span class="BTNtext">Rundown Ned</span></div>
+	<div id="ctrl-alt-hoejre" class="hoejre btn"><span class="BTNletter">Højre</span><span class="BTNtext">Rundown Frem</span></div>
+	
+	</div>
+</div><!-- ctrl altlayer -->
+
+	
+	
+	<div id="alt-shiftLayer">	
+	<!-- ROW 1 -->
+	<div id="alt-shift-row1" class="row1 rowContainer">
+	<div id="alt-shift-ESC" class="esc btn"><span class="BTNletter">ESC</span></div>
+	<div id="alt-shift-ESC-space" class="esc-space"></div>
+	<div id="alt-shift-F1" class="F1 tooltip btn"><span class="BTNletter">F1</span><span class="BTNtext">Kam1</span><span class="tooltiptext"></span></div>
+	<div id="alt-shift-F2" class="F2 tooltip btn"><span class="BTNletter">F2</span><span class="BTNtext">Kam2</span><span class="tooltiptext"></span></div>
+	<div id="alt-shift-F3" class="F3 tooltip btn"><span class="BTNletter">F3</span><span class="BTNtext">Kam3</span><span class="tooltiptext"></span></div>
+	<div id="alt-shift-F4" class="F4 tooltip btn"><span class="BTNletter">F4</span><span class="BTNtext">Kam4</span><span class="tooltiptext"></span></div>
+	<div id="alt-shift-F5" class="F5 btn"><span class="BTNletter">F5</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="alt-shift-F6" class="F6 tooltip btn"><span class="BTNletter">F6</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="alt-shift-F7" class="F7 tooltip btn"><span class="BTNletter">F7</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="alt-shift-F8" class="F8 tooltip btn"><span class="BTNletter">F8</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="alt-shift-F9" class="F9 tooltip btn"><span class="BTNletter">F9</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="alt-shift-F10" class="F10 btn"><span class="BTNletter">F10</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="alt-shift-F11" class="F11 tooltip btn"><span class="BTNletter">F11</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="alt-shift-F12" class="F12 tooltip btn"><span class="BTNletter">F12</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	</div>
+	<!-- ROW 2 START-->
+	<div id="alt-shift-row2" class="row2 rowContainer">
+	<div id="alt-shift-sectionSign" class="btn"><span class="BTNletter">§</span><span class="BTNtext"></span></div><!-- §-->
+	<div id="alt-shift-1" class="1 tooltip btn"><span class="BTNletter">1</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="alt-shift-2" class="2 tooltip btn"><span class="BTNletter">2</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="alt-shift-3" class="3 tooltip btn"><span class="BTNletter">3</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="alt-shift-4" class="4 tooltip btn"><span class="BTNletter">4</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="alt-shift-5" class="5 tooltip btn"><span class="BTNletter">5</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="alt-shift-6" class="6 tooltip btn"><span class="BTNletter">6</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="alt-shift-7" class="7 tooltip btn"><span class="BTNletter">7</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="alt-shift-8" class="8 tooltip btn"><span class="BTNletter">8</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="alt-shift-9" class="9 tooltip btn"><span class="BTNletter">9</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="alt-shift-0" class="10 tooltip btn"><span class="BTNletter">0</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="alt-shift-plusSign" class="plusSign tooltip btn"><span class="BTNletter">+</span><span class="BTNtext"></span></div>
+	<div id="alt-shift-diacriticalMarkSign " class="diacriticalMarkSign tooltip btn"><span class="BTNletter">´</span><span class="BTNtext"></span></div><!-- ´-->
+	<div id="alt-shift-backspace" class="backspace tooltip btn"><span class="BTNletter">backspace</span><span class="BTNtext"></span></div>
+	</div>
+	<!-- ROW 3 -->
+	<div id="alt-shift-row3" class="row3 rowContainer">
+	<div id="alt-shift-tab" class="tab tooltip btn"><span class="BTNletter">TAB</span></div>
+	<div id="alt-shift-Q"  class="Q tooltip btn"><span class="BTNletter">Q</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="alt-shift-W"  class="W tooltip btn"><span class="BTNletter">W</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="alt-shift-E"  class="E tooltip btn"><span class="BTNletter">E</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="alt-shift-R"  class="R tooltip btn"><span class="BTNletter">R</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="alt-shift-T" class="T tooltip  btn"><span class="BTNletter">T</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="alt-shift-Y" class="Y tooltip  btn"><span class="BTNletter">Y</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="alt-shift-U"  class="U btn"><span class="BTNletter">U</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="alt-shift-I" class="I btn"><span class="BTNletter">I</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="alt-shift-O" class="O btn"><span class="BTNletter">O</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="alt-shift-P"  class="P btn"><span class="BTNletter">P</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="alt-shift-Å" class="Å btn"><span class="BTNletter">Å</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="alt-shift-umlautSign" class="umlautSign btn"><span class="BTNletter">¨</span><span class="BTNtext"></span><span class="tooltiptext"></span></div><!-- ¨ -->
+		<div id="alt-shift-insert" class="insert tooltip btn"><span class="BTNletter">INS</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+			<div id="alt-shift-home" class="home tooltip btn"><span class="BTNletter">HOME</span><span class="BTNtext">sidste ovl af</span><span class="tooltiptext"></span></div>
+			<div id="alt-shift-pup" class="pup tooltip btn"><span class="BTNletter">PGDUP</span><span class="BTNtext">Sec audio op</span><span class="tooltiptext"></span></div>
+		
+	</div>
+	<!-- ROW 4 -->
+	<div id="alt-shift-row4" class="row4 rowContainer">
+	<div id="alt-shift-A" class="A tooltip btn"><span class="BTNletter">A</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="alt-shift-S" class="S btn"><span class="BTNletter">S</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="alt-shift-D" class="D btn"><span class="BTNletter">D</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="alt-shift-F" class="F btn"><span class="BTNletter">F</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="alt-shift-G" class="G tooltip btn"><span class="BTNletter">G</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="alt-shift-H" class="H tooltip btn"><span class="BTNletter">H</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="alt-shift-J" class="J tooltip btn"><span class="BTNletter">J</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="alt-shift-K" class="K btn"><span class="BTNletter">K</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="alt-shift-L" class="L btn"><span class="BTNletter">L</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="alt-shift-Æ" class="Æ btn"><span class="BTNletter">Æ</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="alt-shift-Ø" class="Ø tooltip  btn"><span class="BTNletter">Ø</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="alt-shift-apostropheSign" class="apostropheSign tooltip btn"><span class="BTNletter">'</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+		<div id="alt-shift-delete" class="delete tooltip btn"><span class="BTNletter">DEL</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+			<div id="alt-shift-end" class="end tooltip btn"><span class="BTNletter">END</span><span class="BTNtext">DSK 1 on/off</span><span class="tooltiptext"></span></div>
+			<div id="alt-shift-pdown" class="pdown tooltip btn"><span class="BTNletter">PGDO</span><span class="BTNtext">sec audio ned</span><span class="tooltiptext"></span></div>
+	</div>
+	<!-- ROW 5 -->
+	<div id="alt-shift-row5" class="row5 rowContainer">
+	 <div id="alt-shift-shift" class="shift tooltip btn"><span class="BTNletter">SHIFT</span><span class="BTNtext"></span></div>
+	<div id="alt-shift-lessThanSign" class="lessThanSign tooltip btn"><span class="BTNletter">&lt;</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="alt-shift-Z" class="Z tooltip  btn"><span class="BTNletter">Z</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="alt-shift-X" class="X tooltip btn"><span class="BTNletter">X</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="alt-shift-C" class="C tooltip  btn"><span class="BTNletter">C</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="alt-shift-V" class="V btn"><span class="BTNletter">V</span><span class="BTNtext"></span></div>
+	<div id="alt-shift-B" class="B btn"><span class="BTNletter">B</span><span class="BTNtext"></span></div>
+	<div id="alt-shift-N" class="N btn"><span class="BTNletter">N</span><span class="BTNtext"></span></div>
+	<div id="alt-shift-M" class="M btn"><span class="BTNletter">M</span><span class="BTNtext"></span></div>
+	<div id="alt-shift-commasign" class="commasign btn"><span class="BTNletter">,</span><span class="BTNtext"></span></div>
+	<div id="alt-shift-punktSign" class="punktSign btn"><span class="BTNletter">.</span><span class="BTNtext"></span></div>
+	<div id="alt-shift-hyphenSign" class="hyphenSign btn"><span class="BTNletter">-</span><span class="BTNtext"></span></div>
+		<div id="alt-shift-op" class="op btn"><span class="BTNletter">op</span><span class="BTNtext">Rundown OP</span></div>
+	
+	</div>
+	<!-- ROW 6 -->
+	<div id="alt-shift-row6" class="row6 rowContainer">
+	 <div id="alt-shift-ctrlleft" class="ctrlleft tooltip btn"><span class="BTNletter">CTRL</span><span class="BTNtext"></span></div>
+	<div id="alt-shift-windows" class="windows tooltip  btn"><span class="BTNletter">WIN</span><span class="BTNtext"></span></div>
+	<div id="alt-shift-alt" class="alt tooltip  btn"><span class="BTNletter">ALT</span><span class="BTNtext"></span></div>
+	<div id="alt-shift-space" class="space tooltip btn"><span class="BTNletter">Space</span><span class="BTNtext"></span></div>
+	<div id="alt-shift-altgr" class="altgr tooltip  btn"><span class="BTNletter">AltGr</span><span class="BTNtext"></span></div>
+	<div id="alt-shift-ctrlright" class="ctrlright btn"><span class="BTNletter">ctrl</span><span class="BTNtext"></span></div>
+		<div id="alt-shift-venstre" class="venstre btn"><span class="BTNletter">venstre</span><span class="BTNtext">Rundown Tilbae</span></div>
+	<div id="alt-shift-ned" class="ned btn"><span class="BTNletter">ned</span><span class="BTNtext">Rundown Ned</span></div>
+	<div id="alt-shift-hoejre" class="hoejre btn"><span class="BTNletter">Højre</span><span class="BTNtext">Rundown Frem</span></div>
+	
+	
+	</div>
+</div><!-- alt shiftlayer -->
+	
+
+	<div id="ctrl-alt-shiftLayer">	
+	<!-- ROW 1 -->
+	<div id="ctrl-alt-shift-row1" class="row1 rowContainer">
+	<div id="ctrl-alt-shift-ESC" class="esc btn"><span class="BTNletter">ESC</span></div>
+	<div id="ctrl-alt-shift-ESC-space" class="esc-space"></div>
+	<div id="ctrl-alt-shift-F1" class="F1 tooltip btn"><span class="BTNletter">F1</span><span class="BTNtext">Kam1</span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-shift-F2" class="F2 tooltip btn"><span class="BTNletter">F2</span><span class="BTNtext">Kam2</span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-shift-F3" class="F3 tooltip btn"><span class="BTNletter">F3</span><span class="BTNtext">Kam3</span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-shift-F4" class="F4 tooltip btn"><span class="BTNletter">F4</span><span class="BTNtext">Kam4</span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-shift-F5" class="F5 btn"><span class="BTNletter">F5</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-shift-F6" class="F6 tooltip btn"><span class="BTNletter">F6</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-shift-F7" class="F7 tooltip btn"><span class="BTNletter">F7</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-shift-F8" class="F8 tooltip btn"><span class="BTNletter">F8</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-shift-F9" class="F9 tooltip btn"><span class="BTNletter">F9</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-shift-F10" class="F10 btn"><span class="BTNletter">F10</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-shift-F11" class="F11 tooltip btn"><span class="BTNletter">F11</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-shift-F12" class="F12 tooltip btn"><span class="BTNletter">F12</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	</div>
+	<!-- ROW 2 START-->
+	<div id="ctrl-alt-shift-row2" class="row2 rowContainer">
+	<div id="ctrl-alt-shift-sectionSign" class="btn"><span class="BTNletter">§</span><span class="BTNtext"></span></div><!-- §-->
+	<div id="ctrl-alt-shift-1" class="1 tooltip btn"><span class="BTNletter">1</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-shift-2" class="2 tooltip btn"><span class="BTNletter">2</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-shift-3" class="3 tooltip btn"><span class="BTNletter">3</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-shift-4" class="4 tooltip btn"><span class="BTNletter">4</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-shift-5" class="5 tooltip btn"><span class="BTNletter">5</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-shift-6" class="6 tooltip btn"><span class="BTNletter">6</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-shift-7" class="7 tooltip btn"><span class="BTNletter">7</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-shift-8" class="8 tooltip btn"><span class="BTNletter">8</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-shift-9" class="9 tooltip btn"><span class="BTNletter">9</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-shift-0" class="10 tooltip btn"><span class="BTNletter">0</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-shift-plusSign" class="plusSign tooltip btn"><span class="BTNletter">+</span><span class="BTNtext"></span></div>
+	<div id="ctrl-alt-shift-diacriticalMarkSign " class="diacriticalMarkSign tooltip btn"><span class="BTNletter">´</span><span class="BTNtext"></span></div><!-- ´-->
+	<div id="ctrl-alt-shift-backspace" class="backspace tooltip btn"><span class="BTNletter">backspace</span><span class="BTNtext"></span></div>
+	</div>
+	<!-- ROW 3 -->
+	<div id="ctrl-alt-shift-row3" class="row3 rowContainer">
+	<div id="ctrl-alt-shift-tab" class="tab tooltip btn"><span class="BTNletter">TAB</span></div>
+	<div id="ctrl-alt-shift-Q"  class="Q tooltip btn"><span class="BTNletter">Q</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-shift-W"  class="W tooltip btn"><span class="BTNletter">W</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-shift-E"  class="E tooltip btn"><span class="BTNletter">E</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-shift-R"  class="R tooltip btn"><span class="BTNletter">R</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-shift-T" class="T tooltip  btn"><span class="BTNletter">T</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-shift-Y" class="Y tooltip  btn"><span class="BTNletter">Y</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-shift-U"  class="U btn"><span class="BTNletter">U</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-shift-I" class="I btn"><span class="BTNletter">I</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-shift-O" class="O btn"><span class="BTNletter">O</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-shift-P"  class="P btn"><span class="BTNletter">P</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-shift-Å" class="Å btn"><span class="BTNletter">Å</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-shift-umlautSign" class="umlautSign btn"><span class="BTNletter">¨</span><span class="BTNtext"></span><span class="tooltiptext"></span></div><!-- ¨ -->
+		<div id="ctrl-alt-shift-insert" class="insert tooltip btn"><span class="BTNletter">INS</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+			<div id="ctrl-alt-shift-home" class="home tooltip btn"><span class="BTNletter">HOME</span><span class="BTNtext">sidste ovl af</span><span class="tooltiptext"></span></div>
+			<div id="ctrl-alt-shift-pup" class="pup tooltip btn"><span class="BTNletter">PGDUP</span><span class="BTNtext">Sec audio op</span><span class="tooltiptext"></span></div>
+	</div>
+	<!-- ROW 4 -->
+	<div id="ctrl-alt-shift-row4" class="row4 rowContainer">
+	<div id="ctrl-alt-shift-A" class="A tooltip btn"><span class="BTNletter">A</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-shift-S" class="S btn"><span class="BTNletter">S</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-shift-D" class="D btn"><span class="BTNletter">D</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-shift-F" class="F btn"><span class="BTNletter">F</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-shift-G" class="G tooltip btn"><span class="BTNletter">G</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-shift-H" class="H tooltip btn"><span class="BTNletter">H</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-shift-J" class="J tooltip btn"><span class="BTNletter">J</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-shift-K" class="K btn"><span class="BTNletter">K</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-shift-L" class="L btn"><span class="BTNletter">L</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-shift-Æ" class="Æ btn"><span class="BTNletter">Æ</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-shift-Ø" class="Ø tooltip  btn"><span class="BTNletter">Ø</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-shift-apostropheSign" class="apostropheSign tooltip btn"><span class="BTNletter">'</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+		<div id="ctrl-alt-shift-delete" class="delete tooltip btn"><span class="BTNletter">DEL</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+			<div id="ctrl-alt-shift-end" class="end tooltip btn"><span class="BTNletter">END</span><span class="BTNtext">DSK 1 on/off</span><span class="tooltiptext"></span></div>
+			<div id="ctrl-alt-shift-pdown" class="pdown tooltip btn"><span class="BTNletter">PGDO</span><span class="BTNtext">sec audio ned</span><span class="tooltiptext"></span></div>
+	</div>
+	<!-- ROW 5 -->
+	<div id="ctrl-alt-shift-row5" class="row5 rowContainer">
+	 <div id="ctrl-alt-shift-shift" class="shift tooltip btn"><span class="BTNletter">SHIFT</span><span class="BTNtext"></span></div>
+	<div id="ctrl-alt-shift-lessThanSign" class="lessThanSign tooltip btn"><span class="BTNletter">&lt;</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-shift-Z" class="Z tooltip  btn"><span class="BTNletter">Z</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-shift-X" class="X tooltip btn"><span class="BTNletter">X</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-shift-C" class="C tooltip  btn"><span class="BTNletter">C</span><span class="BTNtext"></span><span class="tooltiptext"></span></div>
+	<div id="ctrl-alt-shift-V" class="V btn"><span class="BTNletter">V</span><span class="BTNtext"></span></div>
+	<div id="ctrl-alt-shift-B" class="B btn"><span class="BTNletter">B</span><span class="BTNtext"></span></div>
+	<div id="ctrl-alt-shift-N" class="N btn"><span class="BTNletter">N</span><span class="BTNtext"></span></div>
+	<div id="ctrl-alt-shift-M" class="M btn"><span class="BTNletter">M</span><span class="BTNtext"></span></div>
+	<div id="ctrl-alt-shift-commasign" class="commasign btn"><span class="BTNletter">,</span><span class="BTNtext"></span></div>
+	<div id="ctrl-alt-shift-punktSign" class="punktSign btn"><span class="BTNletter">.</span><span class="BTNtext"></span></div>
+	<div id="ctrl-alt-shift-hyphenSign" class="hyphenSign btn"><span class="BTNletter">-</span><span class="BTNtext"></span></div>
+		<div id="ctrl-alt-shift-op" class="op btn"><span class="BTNletter">op</span><span class="BTNtext">Rundown OP</span></div>
+   
+	</div>
+	<!-- ROW 6 -->
+	<div id="ctrl-alt-shift-row6" class="row6 rowContainer">
+	 <div id="ctrl-alt-shift-ctrlleft" class="ctrlleft tooltip btn"><span class="BTNletter">CTRL</span><span class="BTNtext"></span></div>
+	<div id="ctrl-alt-shift-windows" class="windows tooltip  btn"><span class="BTNletter">WIN</span><span class="BTNtext"></span></div>
+	<div id="ctrl-alt-shift-alt" class="alt tooltip  btn"><span class="BTNletter">ALT</span><span class="BTNtext"></span></div>
+	<div id="ctrl-alt-shift-space" class="space tooltip btn"><span class="BTNletter">Space</span><span class="BTNtext"></span></div>
+	<div id="ctrl-alt-shift-altgr" class="altgr tooltip  btn"><span class="BTNletter">AltGr</span><span class="BTNtext"></span></div>
+	<div id="ctrl-alt-shift-ctrlright" class="ctrlright btn"><span class="BTNletter">ctrl</span><span class="BTNtext"></span></div>
+		<div id="ctrl-alt-shift-venstre" class="venstre btn"><span class="BTNletter">venstre</span><span class="BTNtext">Rundown Tilbae</span></div>
+	<div id="ctrl-alt-shift-ned" class="ned btn"><span class="BTNletter">ned</span><span class="BTNtext">Rundown Ned</span></div>
+	<div id="ctrl-alt-shift-hoejre" class="hoejre btn"><span class="BTNletter">Højre</span><span class="BTNtext">Rundown Frem</span></div>
+	
+	</div>
+</div><!-- ctrl alt shiftlayer -->
+</div><!-- wrapper -->		
+</body>
+</html>

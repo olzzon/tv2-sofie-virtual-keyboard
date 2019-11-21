@@ -1,0 +1,162 @@
+@charset "UTF-8";
+/* CSS Document */
+
+html, body {width: 98%; height: 98%;}	
+body{	background-color: #2E2E2E;
+  		bottom: 0;
+		margin: 0;
+		padding: 0;
+	 
+}
+
+.tooltip1{
+	position: relative;
+	display: inline-block;
+}
+.tooltiptext { visibility: hidden;}
+.tooltip1 .tooltiptext{
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+  position: absolute;
+  z-index: 1;
+  right: 75%
+}
+
+.overlay{
+	background: linear-gradient(to right, #343434 65%, #CA9D00 35%);
+	color: #000000!important;
+}
+.camera{
+	background: #005919;
+	color: #000000!important;
+}
+.clip{
+	background: #1769FF;
+	color: #000000!important;
+}
+.vo{
+	background: linear-gradient(to right, #1769FF 65%, #005919 35%);
+	color: #000000!important;
+}
+.adlib{
+	background: linear-gradient(to right, #1769FF 65%, #AC29A5 35%);
+	color: #000000!important;
+}
+.live{
+	background: #AC29A5;
+	color: #000000!important;
+}
+.dve{
+	background: #00A99C;
+	color: #000000!important;
+}
+.graphic{
+	background: #AF4900;
+	color: #000000!important;
+		}
+
+.jingle {
+	background: #343434;
+	color: #000000!important;
+}
+.phone{
+	background: #AF4900;
+	color: #000000!important;
+}
+.sound{
+	background: #343434;
+	color: #000000!important;
+}
+.accessory{
+	background: #343434;
+	color: #000000!important;
+}
+.command{
+	background: #343434;
+	color: #00000!important;
+}
+.btn {
+  border-radius: 20%;
+  border: 1px solid #FFFFFF;
+  padding: 1%; 
+  width:  3.2%;/*calc(100% / 21);*/
+  font-family: "Helvetica Neue", Helvetica, Arial, "sans-serif";
+  color: #666;
+ font-size: 14px;
+  font-size: 0.9vmax;
+  overflow: hidden;
+ height:40%;
+ margin-top:0.7%; 
+ margin-bottom:1%;	
+}
+.btn:hover{opacity: 0.6}
+.btn:active{opacity: 0.3}
+
+#wrapper { 
+  width: 98%;
+  padding-top: 42%; /* 1:1 Aspect Ratio */
+  position: relative; /* If you want text inside of it */
+  margin: 1%;
+  }	
+#normalLayer, #shiftLayer, #ctrlLayer, #altLayer, #ctrl-shiftLayer, #ctrl-altLayer, #alt-shiftLayer, #ctrl-alt-shiftLayer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background-color: #2E2E2E;
+ } 	
+#shiftLayer {display: none; }
+#ctrlLayer {display: none; }
+#altLayer {display: none; }
+#ctrl-shiftLayer {display: none;}
+#ctrl-altLayer {display: none; }
+#alt-shiftLayer {display: none;  }
+#ctrl-alt-shiftLayer {display: none; }
+.layerTxt {color: #FFFFFF; margin-left: 3%;}
+
+div.rowContainer {overflow: hidden; margin: 0.1%; border-radius: 15px;  height: 13%;}
+.rowContainer > div {
+  display: inline-block;
+  vertical-align: middle;
+  overflow: hidde;
+  position:relative;
+}
+/*Buttons*/
+.BTNletter { font-size: 1.1vmax;  display: inline-block;  position: absolute; right: 6%; top: 6%; font-weight:bold;}
+.BTNtext { font-size: 0.8vmax; color: #FFFFFF; width: 85%;  position: absolute; left: 7%; bottom: 5%;  font-weight:bold; text-align:left;}
+.row1 .BTNletter {color: #000000!important;}
+/*special styling*/
+.esc-space {padding-right: 3%;}
+
+.row1 { background-color: #777777; }
+.esc {margin-left: 1%;}
+.F4, .F8 {margin-right: 3%;}
+.backspace {width:  7%; border-radius: 10% / 15%; }
+.tab {width:  7%;  border-radius: 10% / 15%;}
+.A {margin-left: 11%;}
+.shift, .ctrlleft, .AltGr, .ctrlright  {width:  6%; border-radius: 10% / 15%;}
+.space {width:  28%; border-radius: 3% / 20%;}
+.op {margin-left: 6.5%; }
+.venstre {margin-left: 8%;}
+.insert {margin-left: 4%;}
+.delete {margin-left: 2.5%;}
+
+#shift-shift {background-color: #FFFFFF;}
+#ctrl-ctrlleft {background-color: #FFFFFF;}
+#alt-alt {background-color: #FFFFFF;}
+#ctrl-shift-ctrlleft {background-color: #FFFFFF;}
+#ctrl-shift-shift {background-color: #FFFFFF;}
+#ctrl-alt-alt {background-color: #FFFFFF;}
+#ctrl-alt-ctrlleft {background-color: #FFFFFF;}
+#alt-shift-alt {background-color: #FFFFFF;}
+#alt-shift-shift {background-color: #FFFFFF;}
+
+#ctrl-alt-shift-shift {background-color: #FFFFFF;}
+#ctrl-alt-shift-ctrlleft {background-color: #FFFFFF;}
+#ctrl-alt-shift-alt {background-color: #FFFFFF;}
